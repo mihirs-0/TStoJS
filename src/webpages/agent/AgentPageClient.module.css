@@ -1,0 +1,38 @@
+.root-container {
+  width: 900px;
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.root-container.dark {
+  color: #f5f5f5;
+}
+
+.content-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.content-container.dark {
+  color: #f5f5f5;
+}
+
+.title-container {
+  margin-bottom: 2rem;
+}
+
+.interface-section {
+  margin-bottom: 2rem;
+}
+
+/* Interface styles moved to InterfaceInputClient.module.css */
+
+/* Chat styles moved to ChatUIClient.module.css */
+
+.json-section {
+  margin-top: 2rem;
+}
+
+/* Animations moved to ChatUIClient.module.css */
