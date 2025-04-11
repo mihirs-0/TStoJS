@@ -1,38 +1,25 @@
-.root-container {
-  width: 900px;
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
   display: flex;
   flex-direction: column;
-  min-height: 100vh;
+  gap: 2rem;
 }
 
-.root-container.dark {
-  color: #f5f5f5;
+.card {
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.content-container {
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-}
-
-.content-container.dark {
-  color: #f5f5f5;
-}
-
-.title-container {
-  margin-bottom: 2rem;
-}
-
-.interface-section {
-  margin-bottom: 2rem;
-}
-
-/* Interface styles moved to InterfaceInputClient.module.css */
-
-/* Chat styles moved to ChatUIClient.module.css */
-
-.json-section {
-  margin-top: 2rem;
-}
-
-/* Animations moved to ChatUIClient.module.css */
+.interfaceInput {
+  width: 100%;
+  min-height: 200px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  font-family: monospace;
+  resize: vertical;
+} 

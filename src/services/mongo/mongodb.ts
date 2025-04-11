@@ -1,17 +1,16 @@
 import { MongoClient, MongoClientOptions } from 'mongodb';
 
 const mongodbUri = process.env.CUSTOMCONNSTR_MONGODB_URI;
-if (typeof mongodbUri !== 'string') {
-  throw new Error('Missing environment variable: "CUSTOMCONNSTR_MONGODB_URI"');
-}
-
-const options: MongoClientOptions = {};
+const nodeEnv = process.env.NODE_ENV;
 
 let client: MongoClient;
 let connectToMongoClientPromise: Promise<MongoClient>;
 
-const nodeEnv = process.env.NODE_ENV;
-if (nodeEnv === 'test') {
+if (nodeEnv === 'development') {
+  // In development, use a mock connection
+  console.log('Using mock MongoDB connection in development mode');
+  connectToMongoClientPromise = Promise.resolve({} as MongoClient);
+} else if (nodeEnv === 'test') {
   // In test mode, use a global variable so that we can override it in jest-setup
   const globalWithMongo = global as typeof globalThis & {
     _mongoTestClientPromise?: Promise<MongoClient>;
@@ -20,23 +19,19 @@ if (nodeEnv === 'test') {
     throw new Error('Mongo Memory Server is not running.');
   }
   connectToMongoClientPromise = globalWithMongo._mongoTestClientPromise;
-} else if (nodeEnv === 'development') {
-  // In development mode, use a global variable so that the value
-  // is preserved across module reloads caused by HMR (Hot Module Replacement).
-  const globalWithMongo = global as typeof globalThis & {
-    _mongoClientPromise?: Promise<MongoClient>;
-  };
-
-  if (globalWithMongo._mongoClientPromise == null) {
-    client = new MongoClient(mongodbUri, options);
-    globalWithMongo._mongoClientPromise = client.connect();
-  }
-  connectToMongoClientPromise = globalWithMongo._mongoClientPromise;
 } else {
-  // In production mode, it's best to not use a global variable.
+  // In production, use the actual MongoDB connection
+  if (typeof mongodbUri !== 'string') {
+    throw new Error('Missing environment variable: "CUSTOMCONNSTR_MONGODB_URI"');
+  }
+  const options: MongoClientOptions = {};
   client = new MongoClient(mongodbUri, options);
   connectToMongoClientPromise = client.connect();
 }
+
+export const getMongoClient = async (): Promise<MongoClient> => {
+  return connectToMongoClientPromise;
+};
 
 // Export a module-scoped MongoClient promise. By doing this in a
 // separate module, the client can be shared across functions.
